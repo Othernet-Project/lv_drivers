@@ -95,8 +95,11 @@ bool evdev_read(lv_indev_data_t * data)
     evdev_root_x = evdev_root_y;
     evdev_root_y = t;
 
-    evdev_root_x = LV_HOR_RES - (int) ( (float) evdev_root_x / 4096.0 * LV_HOR_RES);
-    evdev_root_y = (int) ( (float) evdev_root_y / 4096.0 * LV_VER_RES);
+// enable one pair, depending on screen rotate = 90 (first pair) or 270 (second pair)
+//    evdev_root_x = LV_HOR_RES - (int) ( (float) evdev_root_x / 4096.0 * LV_HOR_RES);
+//    evdev_root_y = (int) ( (float) evdev_root_y / 4096.0 * LV_VER_RES);
+    evdev_root_x = (int) ( (float) evdev_root_x / 4096.0 * LV_HOR_RES);
+    evdev_root_y = LV_VER_RES - (int) ( (float) evdev_root_y / 4096.0 * LV_VER_RES);
 
     if (evdev_root_x < 0)
         evdev_root_x = 0;
