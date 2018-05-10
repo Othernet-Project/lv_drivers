@@ -40,6 +40,7 @@ int evdev_button;
 char bl_power[] = "/sys/devices/platform/soc@01c00000/1c06000.spi/spi_master/spi32765/spi32765.0/backlight/fb_ili9341/bl_power";
 int bl_power_fd = -1;
 char bl_power_enable[] = "0";
+char bl_power_readbuf[] = "1";
 
 /**********************
  *   GLOBAL FUNCTIONS
@@ -62,7 +63,7 @@ void evdev_init(void)
     evdev_root_y = 0;
     evdev_button = LV_INDEV_STATE_REL;
 
-    bl_power_fd = open(bl_power, O_WRONLY | O_NONBLOCK);
+    bl_power_fd = open(bl_power, O_RDWR);
 }
 
 /**
@@ -91,7 +92,8 @@ bool evdev_read(lv_indev_data_t * data)
                     evdev_button = LV_INDEV_STATE_REL;
                 else if (in.value == 1) {
                     evdev_button = LV_INDEV_STATE_PR;
-                    write(bl_power_fd, bl_power_enable, strlen(bl_power_enable));
+                    read(bl_power_fd, bl_power_readbuf, strlen(bl_power_readbuf));
+                    if (bl_power_readbuf[0]=='1') write(bl_power_fd, bl_power_enable, strlen(bl_power_enable));
                 }
             }
         }
